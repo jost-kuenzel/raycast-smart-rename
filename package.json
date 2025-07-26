@@ -11,7 +11,7 @@
       "name": "rename-files",
       "title": "Rename Files",
       "description": "Renames PDFs selected in Finder after evaluating their content",
-      "mode": "no-view"
+      "mode": "view"
     }
   ],
   "dependencies": {
