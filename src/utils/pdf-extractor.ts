@@ -49,9 +49,11 @@ export async function extractPDFTexts(filePaths: string[]): Promise<PDFTextResul
   // Try multiple possible paths for the Swift script
   const possiblePaths = [
     `${environment.assetsPath}/../src/vision_ocr.swift`,
-    `${environment.supportPath}/../src/vision_ocr.swift`,
+    `${environment.supportPath}/src/vision_ocr.swift`,
     `/Users/jost/workspace/jk/raycast-extensions/smart-rename/src/vision_ocr.swift`,
   ];
+
+  console.log(possiblePaths);
 
   let swiftScriptPath = "";
 

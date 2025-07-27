@@ -29,10 +29,10 @@ export default function RenameFilesCommand() {
     async function loadSelectedFiles() {
       try {
         setIsLoading(true);
-        
+
         // Get selected files from Finder
         const selectedItems = await getSelectedFinderItems();
-        
+
         if (selectedItems.length === 0) {
           await showToast({
             style: Toast.Style.Failure,
@@ -43,8 +43,8 @@ export default function RenameFilesCommand() {
         }
 
         // Filter to only PDF files
-        const pdfPaths = filterPDFFiles(selectedItems.map(item => item.path));
-        
+        const pdfPaths = filterPDFFiles(selectedItems.map((item) => item.path));
+
         if (pdfPaths.length === 0) {
           await showToast({
             style: Toast.Style.Failure,
@@ -63,30 +63,45 @@ export default function RenameFilesCommand() {
         // Extract text from all PDFs
         const extractResults = await extractPDFTexts(pdfPaths);
 
-        // Generate file rename suggestions
-        const renameItems: FileRenameItem[] = extractResults.map((result, index) => {
-          const suggestedName = result.error 
-            ? result.fileName 
-            : generateFileName(result.extractedText, result.fileName);
+        await showToast({
+          style: Toast.Style.Animated,
+          title: "Generating Names",
+          message: "Using AI to analyze content...",
+        });
 
-          return {
-            id: `item-${index}`,
+        // Generate file rename suggestions using AI
+        const renameItems: FileRenameItem[] = [];
+
+        for (let i = 0; i < extractResults.length; i++) {
+          const result = extractResults[i];
+          let suggestedName = result.fileName;
+
+          if (!result.error) {
+            try {
+              suggestedName = await generateFileName(result.extractedText, result.fileName);
+            } catch (error) {
+              console.error("AI filename generation failed:", error);
+              // Keep original filename if AI fails
+            }
+          }
+
+          renameItems.push({
+            id: `item-${i}`,
             originalPath: result.filePath,
             originalName: result.fileName,
             suggestedName,
             extractedText: result.extractedText,
             error: result.error,
-          };
-        });
+          });
+        }
 
         setItems(renameItems);
-        
+
         await showToast({
           style: Toast.Style.Success,
           title: "Analysis Complete",
           message: `Generated ${renameItems.length} suggestions`,
         });
-
       } catch (error) {
         await showToast({
           style: Toast.Style.Failure,
@@ -104,8 +119,8 @@ export default function RenameFilesCommand() {
   async function handleRenameAll() {
     try {
       const operations: RenameOperation[] = items
-        .filter(item => !item.error && item.suggestedName !== item.originalName)
-        .map(item => ({
+        .filter((item) => !item.error && item.suggestedName !== item.originalName)
+        .map((item) => ({
           originalPath: item.originalPath,
           newPath: item.originalPath.replace(item.originalName, item.suggestedName),
           originalName: item.originalName,
@@ -122,7 +137,7 @@ export default function RenameFilesCommand() {
       }
 
       const success = await executeRenames(operations);
-      
+
       if (success) {
         await showHUD("✅ Files renamed successfully");
         await closeMainWindow();
@@ -155,7 +170,7 @@ export default function RenameFilesCommand() {
       };
 
       const success = await executeRenames([operation]);
-      
+
       if (success) {
         await showHUD(`✅ Renamed: ${item.suggestedName}`);
         await closeMainWindow();
@@ -177,22 +192,22 @@ export default function RenameFilesCommand() {
             <List.Item
               key={item.id}
               title={item.suggestedName}
-              subtitle={`Original: ${item.originalName}`}
+              //subtitle={`Original: ${item.originalName}`}
               icon={item.error ? "❌" : item.suggestedName !== item.originalName ? "📝" : "✅"}
               accessories={[
-                { 
-                  text: item.error ? "Error" : item.suggestedName === item.originalName ? "No change" : "Rename suggested" 
+                {
+                  text: item.error
+                    ? "Error"
+                    : item.suggestedName === item.originalName
+                      ? "No change"
+                      : "Rename suggested",
                 },
               ]}
               actions={
                 <ActionPanel>
                   {!item.error && (
                     <>
-                      <Action
-                        title="Rename This File"
-                        onAction={() => handleRenameOne(item)}
-                        icon="📝"
-                      />
+                      <Action title="Rename This File" onAction={() => handleRenameOne(item)} icon="📝" />
                       <Action
                         title="Rename All Files"
                         onAction={handleRenameAll}
@@ -219,7 +234,7 @@ export default function RenameFilesCommand() {
           ))}
         </List.Section>
       )}
-      
+
       {!isLoading && items.length === 0 && (
         <List.EmptyView
           title="No PDF Files Selected"

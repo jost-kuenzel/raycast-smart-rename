@@ -1,4 +1,4 @@
-import { showToast, Toast } from "@raycast/api";
+import { showToast, Toast, AI } from "@raycast/api";
 
 export interface RenameOperation {
   originalPath: string;
@@ -7,10 +7,79 @@ export interface RenameOperation {
   newName: string;
 }
 
+interface ExtractedInfo {
+  date: string;
+  sender: string;
+  subject: string;
+}
+
 /**
- * Generates a filename from extracted text using template: {date} {sender} - {subject}
+ * Generates a filename from extracted text using Raycast AI API
  */
-export function generateFileName(extractedText: string, originalFileName: string): string {
+export async function generateFileName(extractedText: string, originalFileName: string): Promise<string> {
+  if (!extractedText.trim()) {
+    return originalFileName;
+  }
+
+  try {
+    const prompt = `
+Extract from this text the following information:
+- Date: Format should be YYYY-MM-DD; for example, if only "April 2023" is specified, then it should be "2023-04-01".
+- Sender: Company name, institution, or Doctor, or person, e.g., instead of "ARAG Versicherungen" simply "ARAG".
+- Subject: Max. 3 words. If there is an insurance number, or invoice number, or similar, then it should be included in the subject.
+
+Important:
+* Casting should be normalized.
+* Detect the document language and stick to it.
+* Reply in JSON format ({"date":"Date","sender":"Sender","subject":"Subject"}).
+
+The text to analyze is:
+${extractedText}`;
+
+    const response = await AI.ask(prompt, { model: "llama2-70b" });
+
+    // Parse the AI response
+    const cleanResponse = response
+      .trim()
+      .replace(/^```json\s*/, "")
+      .replace(/\s*```$/, "");
+    const extractedInfo: ExtractedInfo = JSON.parse(cleanResponse);
+
+    // Build filename using template: {date} {sender} - {subject}
+    let newName = "";
+
+    if (extractedInfo.date) {
+      newName += extractedInfo.date;
+    }
+
+    if (extractedInfo.sender) {
+      const sanitizedSender = sanitizeFileName(extractedInfo.sender).substring(0, 30);
+      newName += (newName ? " " : "") + sanitizedSender;
+    }
+
+    if (extractedInfo.subject) {
+      const sanitizedSubject = sanitizeFileName(extractedInfo.subject).substring(0, 50);
+      newName += (newName ? " - " : "") + sanitizedSubject;
+    }
+
+    // Fallback if no content extracted
+    if (!newName) {
+      newName = originalFileName.replace(/\.pdf$/i, "");
+    }
+
+    return newName + ".pdf";
+  } catch (error) {
+    console.error("AI extraction failed:", error);
+
+    // Fallback to original logic if AI fails
+    return generateFileNameFallback(extractedText, originalFileName);
+  }
+}
+
+/**
+ * Fallback filename generation using regex patterns
+ */
+function generateFileNameFallback(extractedText: string, originalFileName: string): string {
   const cleanText = extractedText.replace(/\s+/g, " ").trim();
 
   // Extract date (German formats)

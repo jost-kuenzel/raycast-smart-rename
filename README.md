@@ -1,115 +1,107 @@
-# Smart PDF Rename - Raycast Extension
+# 🤖 Smart PDF Rename
 
-Eine intelligente Raycast Extension zum automatischen Umbenennen von PDF-Dokumenten basierend auf ihrem Inhalt mit Hilfe des macOS Vision Frameworks für OCR.
+**Finally, an end to chaotic PDF names!** This Raycast Extension automatically reads your PDF content and intelligently renames them – powered by AI and macOS Vision Framework.
 
-## Features
+## ✨ What it does
 
-- 🔍 **OCR-basierte Analyse**: Nutzt macOS Vision Framework für präzise Texterkennung
-- 📄 **PDF-Optimiert**: Speziell für PDF-Dokumente entwickelt 
-- 🇩🇪 **Deutsche Sprachunterstützung**: Erkennt deutsche Datumsformate und Textinhalte
-- 🎯 **Smart Naming**: Automatische Extraktion von Datum, Absender und Betreff
-- ⚡ **Raycast Integration**: Nahtlose Integration in den Raycast Workflow
-- 🍎 **macOS Native**: Verwendet AppleScript für sichere Datei-Umbenennungen
+Smart PDF Rename transforms unreadable filenames like `scan_20250126_143022.pdf` automatically into clean, structured names like `2025-01-26 Deutsche Bank - Account Statement January.pdf`.
 
-## Workflow
+### 🧠 Intelligent Recognition
 
-1. **Finder**: PDF-Dateien auswählen
-2. **Raycast**: "Rename Files" Command ausführen
-3. **Analyse**: OCR-Extraktion der ersten PDF-Seite
-4. **Vorschläge**: Automatische Generierung neuer Dateinamen
-5. **Umbenennung**: Return-Taste bestätigt die Umbenennung
-6. **Abschluss**: Command schließt automatisch
+The extension combines **macOS Vision Framework** (for precise OCR) with **Raycast AI** (for intelligent analysis) and automatically extracts:
 
-## Template Format
+- **📅 Date** - Recognizes German and international formats
+- **🏢 Sender** - Companies, institutions, or individuals  
+- **📋 Subject** - Core content of the document
 
-Die Extension nutzt folgendes Namensschema:
+### 🎯 Perfect Naming Structure
+
+All renamed files follow the schema:
 ```
-{YYYY-MM-DD} {Absender} - {Betreff}.pdf
+YYYY-MM-DD Sender - Subject.pdf
 ```
 
-**Beispiele:**
-- `2024-01-15 Stadtwerke München - Stromrechnung Januar.pdf`
-- `2024-02-03 Deutsche Bank - Kontoauszug Februar.pdf`
-- `2024-03-20 Versicherung AG - Schadensmeldung Bestätigung.pdf`
+**Real-world examples:**
+- `2025-01-26 Stadtwerke München - Electricity Bill.pdf`
+- `2024-12-15 Deutsche Bank - Credit Card Statement.pdf`
+- `2025-01-10 AOK Bayern - Medical Benefits.pdf`
+- `2024-11-30 Allianz Insurance - Damage Report.pdf`
 
-## Installation
+## 🚀 How it works
 
-1. Repository klonen oder ZIP herunterladen
-2. Terminal öffnen und zum Projektordner navigieren
-3. Dependencies installieren:
-   ```bash
-   npm install
-   ```
-4. Extension entwickeln/testen:
-   ```bash
-   npm run dev
-   ```
-5. Extension bauen:
-   ```bash
-   npm run build
-   ```
+1. **Select PDF in Finder** 📁
+2. **Open Raycast** (`⌘ + Space`)
+3. **Type "Rename Files"** ⌨️
+4. **Press Return** ✅
+5. **Done!** 🎉
 
-## Technische Details
+The extension automatically analyzes the content, suggests intelligent names, and renames with a single keystroke.
 
-### Komponenten
+## 🔮 The magic behind it
 
-- **`vision_ocr.swift`**: Swift-Script für macOS Vision Framework OCR
-- **`utils/pdf-extractor.ts`**: PDF-Textextraktion mit Swift-Integration
-- **`utils/file-renamer.ts`**: Dateinamen-Generierung und AppleScript-Umbenennung
-- **`rename-files.tsx`**: Hauptkomponente mit Raycast UI
+### OCR with Vision Framework
+- **Local & Private** - No data leaves your Mac
+- **Precise text recognition** - Even with poor quality scans
+- **German language optimization** - Perfect for German documents
 
-### Systemanforderungen
+### AI-powered Analysis  
+- **Raycast AI Integration** - Understands context and meaning
+- **Intelligent extraction** - Recognizes relevant information
+- **Fallback system** - Works even without AI
 
-- macOS 10.15+ (Catalina oder neuer)
-- Raycast installiert
-- Node.js 16+
-- TypeScript
+### Secure Renaming
+- **AppleScript integration** - Native macOS support
+- **Error handling** - Safe file operations
+- **Preview mode** - See changes before execution
 
-### Berechtigungen
+## 💡 Why is this cool?
 
-Die Extension benötigt folgende Berechtigungen:
-- **Finder-Zugriff**: Zum Lesen ausgewählter Dateien
-- **Vision Framework**: Für OCR-Texterkennung
-- **AppleScript**: Für sichere Datei-Umbenennungen
+### ⏰ Massive Time Savings
+No more manual renaming. What used to take minutes now happens in seconds.
 
-## Entwicklung
+### 🎯 Perfect Organization  
+Find documents instantly. Chronological sorting and meaningful names make searching obsolete.
 
-### Projektstruktur
-```
-src/
-├── rename-files.tsx          # Hauptkomponente
-├── vision_ocr.swift         # Swift OCR Script
-└── utils/
-    ├── pdf-extractor.ts     # PDF-Textextraktion
-    └── file-renamer.ts      # Dateinamen-Generierung
-```
+### 🧠 Intelligent Automation
+The AI understands content and selects the most important information – better than any regex.
 
-### Debug-Modi
+### 🔒 Completely Private
+Everything runs locally on your Mac. Your documents stay private and secure.
 
-- **Development**: `npm run dev` - Hot-reload für schnelle Entwicklung
-- **Lint**: `npm run lint` - Code-Quality-Checks
-- **Build**: `npm run build` - Production Build
+### 🎨 Native Integration
+Seamless integration into your Mac workflow via Raycast. Feels like a native macOS feature.
 
-## Fehlerbehandlung
+## 🔧 Installation
 
-Die Extension behandelt folgende Fehlerfälle:
-- Nicht lesbare PDF-Dateien
-- OCR-Erkennungsfehler  
-- Ungültige Dateinamen-Zeichen
-- AppleScript-Ausführungsfehler
-- Fehlende Finder-Auswahl
+1. Install Raycast (if not already installed)
+2. Install extension via Raycast Store  
+3. Start immediately – no configuration needed!
 
-## Lizenz
+## 💭 Perfect for
 
-MIT License - siehe LICENSE-Datei für Details.
+- **📊 Invoices & Receipts** - Automatic categorization by vendor and date
+- **🏦 Bank Documents** - Account statements, credit card bills, etc.
+- **🏥 Medical Letters & Reports** - Chronological filing by doctor and date  
+- **📋 Government Letters** - Tax office, insurance, authorities
+- **📧 Scanned Emails** - Newsletters, confirmations, correspondence
 
-## Beitragen
+## 🛠️ Technical Features
 
-1. Fork des Repositories
-2. Feature-Branch erstellen
-3. Änderungen committen
-4. Pull Request erstellen
+### AI-Powered Intelligence
+- **Raycast AI API** - Uses structured prompts for precise extraction
+- **JSON response parsing** - Reliable data extraction
+- **Contextual understanding** - Better than pattern matching
 
-## Support
+### Vision Framework OCR
+- **macOS native** - Optimized for Apple hardware
+- **Multi-language support** - German and English recognition
+- **High accuracy** - Even with challenging documents
 
-Bei Problemen oder Fragen bitte ein Issue im GitHub Repository erstellen.
+### Robust Architecture
+- **Async processing** - Non-blocking AI calls
+- **Error handling** - Graceful fallbacks on failures
+- **Debug logging** - Easy troubleshooting
+
+---
+
+**Smart PDF Rename turns file chaos into an organized archive – automatically, intelligently, and in seconds.** 🚀
