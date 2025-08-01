@@ -1,3 +1,6 @@
+# 👨‍🔬 Experimental 
+**This raycast extension was completely built with Claude Sonnet 4. It is in a very early draft state and meant as a personal proof of concept.**
+
 # 🤖 Smart PDF Rename
 
 **Finally, an end to chaotic PDF names!** This Raycast Extension automatically reads your PDF content and intelligently renames them – powered by AI and macOS Vision Framework.
